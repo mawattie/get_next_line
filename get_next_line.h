@@ -6,7 +6,7 @@
 /*   By: mawattie <mawattie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/15 22:17:50 by mawattie          #+#    #+#             */
-/*   Updated: 2026/01/15 22:26:08 by mawattie         ###   ########.fr       */
+/*   Updated: 2026/01/21 16:32:11 by mawattie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,5 +16,6 @@
 # include
 
 char	*get_next_line(int fd);
+
 
 #endif
