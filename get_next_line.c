@@ -6,22 +6,20 @@
 /*   By: mawattie <mawattie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/15 22:16:02 by mawattie          #+#    #+#             */
-/*   Updated: 2026/01/21 17:19:22 by mawattie         ###   ########.fr       */
+/*   Updated: 2026/01/23 17:25:58 by mawattie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdlib.h>
 #include <unistd.h>
 
 char	*get_next_line(int fd)
 {
 	static char	*stash;
-	char		*buffer;
+	char		*buffer[BUFFER_SIZE +1];
 	char		*line;
 	int			bytes_read;
-	
-	stash = NULL;
+
 }
 
 static char *process_stash(char **stash_ptr)
@@ -34,7 +32,17 @@ static char *process_stash(char **stash_ptr)
 		return (NULL);
 	i = 0;
 
-	line = (char *)malloc();
+	while (*stash_ptr[i] != '\n')
+		i++;
+		
+	if (*stash_ptr[i] == '\n')
+		line = (char *)malloc(i + 2);
+	else
+		line = (char *)malloc(i + 2);
+	
+	if (!line)
+		return (NULL);
+		
 	new_line = (char *)malloc();
 	
 
