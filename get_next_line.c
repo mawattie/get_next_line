@@ -6,7 +6,7 @@
 /*   By: mawattie <mawattie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/15 22:16:02 by mawattie          #+#    #+#             */
-/*   Updated: 2026/01/23 17:25:58 by mawattie         ###   ########.fr       */
+/*   Updated: 2026/01/28 20:48:23 by mawattie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,50 +16,58 @@
 char	*get_next_line(int fd)
 {
 	static char	*stash;
-	char		*buffer[BUFFER_SIZE +1];
 	char		*line;
-	int			bytes_read;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	stash = read_and_stash(fd, stash);
+	if (!stash)
+		return (NULL);
+	line = extract_line(&stash);
+	return (line);
 }
 
-static char *process_stash(char **stash_ptr)
+char	*read_and_stash(int fd, char *stash)
+{
+	char	buffer[BUFFER_SIZE + 1];
+	int		bytes_read;
+	char	*temp;
+
+	bytes_read = 1;
+	while (!ft_strchr(stash, '\n') && bytes_read > 0)
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read < 0)
+			return (free(stash), NULL);
+		buffer[bytes_read] = '\0';
+		temp = ft_strjoin(stash, buffer);
+		free(stash);
+		stash = temp;
+	}
+	return (stash);
+}
+
+char	*extract_line(char **stash)
 {
 	int		i;
 	char	*line;
-	char	*new_line;
+	char	*new_stash;
 
-	if (!*stash_ptr)
+	if (!*stash || !**stash)
 		return (NULL);
 	i = 0;
-
-	while (*stash_ptr[i] != '\n')
+	while ((*stash)[i] && (*stash)[i] != '\n')
 		i++;
-		
-	if (*stash_ptr[i] == '\n')
-		line = (char *)malloc(i + 2);
-	else
-		line = (char *)malloc(i + 2);
-	
+	if ((*stash)[i] == '\n')
+		i++;
+	line = ft_substr(*stash, 0, i);
 	if (!line)
 		return (NULL);
-		
-	new_line = (char *)malloc();
-	
-
-	read()
-	
-	while (stash[i])
-	{
-		if (i == '\n')
-		{
-			line = stash[i] et les char depuis le debut du coup ??;
-			return (line)
-			après le \n new_stash = from line i+1 jusqua end de stash
-		}
-		else
-		{
-			i++;
-		}
-	} 
-	free (line); 
+	if ((*stash)[i])
+		new_stash = ft_strdup(*stash + i);
+	else
+		new_stash = NULL;
+	free(*stash);
+	*stash = new_stash;
+	return (line);
 }

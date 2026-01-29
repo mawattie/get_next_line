@@ -6,12 +6,11 @@
 /*   By: mawattie <mawattie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 15:24:26 by mawattie          #+#    #+#             */
-/*   Updated: 2026/01/23 17:22:13 by mawattie         ###   ########.fr       */
+/*   Updated: 2026/01/28 20:52:10 by mawattie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdlib.h>
 
 char	*ft_strchr(const char *s, int c)
 {

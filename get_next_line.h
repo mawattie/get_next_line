@@ -6,18 +6,24 @@
 /*   By: mawattie <mawattie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/15 22:17:50 by mawattie          #+#    #+#             */
-/*   Updated: 2026/01/23 17:30:38 by mawattie         ###   ########.fr       */
+/*   Updated: 2026/01/28 21:51:01 by mawattie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-# include
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
+# include <stdlib.h>
+# include <unistd.h>
 
 /*MAIN FUNCTIONS*/
 char	*get_next_line(int fd);
-static char *process_stash(char **stash_ptr);
+char	*read_and_stash(int fd, char *stash);
+char	*extract_line(char **stash);
 
 /*UTILS*/
 char	*ft_strchr(const char *s, int c);
