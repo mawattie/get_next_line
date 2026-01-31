@@ -6,44 +6,60 @@
 /*   By: mawattie <mawattie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/15 22:16:02 by mawattie          #+#    #+#             */
-/*   Updated: 2026/01/28 20:48:23 by mawattie         ###   ########.fr       */
+/*   Updated: 2026/01/30 20:12:42 by mawattie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <unistd.h>
 
-char	*get_next_line(int fd)
+static char	*init_stash(char *stash, char *buffer)
 {
-	static char	*stash;
-	char		*line;
+	char	*temp;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	stash = read_and_stash(fd, stash);
 	if (!stash)
+		stash = ft_strdup("");
+	if (!stash)
+	{
+		free(buffer);
 		return (NULL);
-	line = extract_line(&stash);
-	return (line);
+	}
+	temp = ft_strjoin(stash, buffer);
+	free(stash);
+	if (!temp)
+	{
+		free(buffer);
+		return (NULL);
+	}
+	return (temp);
 }
 
 char	*read_and_stash(int fd, char *stash)
 {
-	char	buffer[BUFFER_SIZE + 1];
+	char	*buffer;
 	int		bytes_read;
-	char	*temp;
 
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
 	bytes_read = 1;
 	while (!ft_strchr(stash, '\n') && bytes_read > 0)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
-			return (free(stash), NULL);
+		{
+			free(buffer);
+			free(stash);
+			return (NULL);
+		}
+		if (bytes_read == 0)
+			break ;
 		buffer[bytes_read] = '\0';
-		temp = ft_strjoin(stash, buffer);
-		free(stash);
-		stash = temp;
+		stash = init_stash(stash, buffer);
+		if (!stash)
+			break ;
 	}
+	free(buffer);
 	return (stash);
 }
 
@@ -53,7 +69,7 @@ char	*extract_line(char **stash)
 	char	*line;
 	char	*new_stash;
 
-	if (!*stash || !**stash)
+	if (!stash || !*stash || **stash == '\0')
 		return (NULL);
 	i = 0;
 	while ((*stash)[i] && (*stash)[i] != '\n')
@@ -63,11 +79,30 @@ char	*extract_line(char **stash)
 	line = ft_substr(*stash, 0, i);
 	if (!line)
 		return (NULL);
-	if ((*stash)[i])
+	if ((*stash)[i] != '\0')
 		new_stash = ft_strdup(*stash + i);
 	else
 		new_stash = NULL;
 	free(*stash);
 	*stash = new_stash;
+	return (line);
+}
+
+char	*get_next_line(int fd)
+{
+	static char		*stash;
+	char			*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	{
+		if (stash)
+			free(stash);
+		stash = NULL;
+		return (NULL);
+	}
+	stash = read_and_stash(fd, stash);
+	if (!stash)
+		return (NULL);
+	line = extract_line(&stash);
 	return (line);
 }
